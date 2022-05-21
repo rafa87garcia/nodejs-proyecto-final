@@ -52,7 +52,7 @@ router.post("/register",
   
 
 // to Sign-in
-router.post("/signin", (req, res, next) => {
+router.post("/login", (req, res, next) => {
     let getUser;
     userSchema.findOne({
         email: req.body.email
@@ -87,7 +87,11 @@ router.post("/signin", (req, res, next) => {
         });
     });
 });
-
+// to log-out
+router.post('/logout', function(req, res){
+    req.logout();
+    res.redirect('/');
+  });
 // to Get Users
 router.route('/').get((req, res) => {
     userSchema.find((error, response) => {
@@ -128,7 +132,7 @@ router.route('/update-user/:id').put((req, res, next) => {
 
 
 // to Delete User
-router.route('/delete-user/:id').delete((req, res, next) => {
+router.route('/delete/:id').delete((req, res, next) => {
     userSchema.findByIdAndRemove(req.params.id, (error, data) => {
         if (error) {
             return next(error);

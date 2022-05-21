@@ -4,17 +4,22 @@ const uniqueValidator = require('mongoose-unique-validator');// for use validato
 
 //to define the Schema of our user
 let productSchema = new Schema({
-    titulo: {
+    name: {
         type: String
     },
-    precio: {
-        type: Number,
+    description: {
+        type: String,
         unique: true //to indicate that can be only one user name with one email asociated.
     },
     image: {
         type: String
     },
-    
+    pvp: {
+        type: Number
+    },
+    Category: {
+        type: String
+    },
 }, {
     collection: 'products'
 })
