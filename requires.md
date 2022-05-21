@@ -5,7 +5,7 @@ modelo de usuario (roles)
     password
     roles
     image
-
+do it, done! 
 modelo de producto 
     nombre
     descripcion
@@ -19,11 +19,11 @@ modelo de pedido:
    
 
 endpoints de usuarios
-registro            post    anonimo         /users/
+registro            post    anonimo         /users/ 
 login               post    registrado,     /users/login
 modificar           put     registrado,     /users/ 
 logout              post    registrado,     /users/logout
-delete              delete  registrado,     /users/        
+delete              delete  registrado,     /users/delete/:id        
 getuser             get     admin.          /users/
 getuser_id          get     admin.          /users/:id
 
