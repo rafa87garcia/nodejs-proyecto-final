@@ -1,41 +1,42 @@
 const express = require("express"); // required express for using the npm hta.
 const router = express.Router();// required jsonwebtoken for using the function of espress hta.
-const userSchema = require("../models/product.model");// required for using model hta.
+const userSchema = require("../Models/product.model");// required for using model hta.
 const { check, validationResult } = require('express-validator');// required express-validator for using the npm hta.
 
 // to create product
 router1.post("/create-product",
-[
-    check('id', 'id is required')
-        .not()
-        .isEmpty(),
-    check('name')
-        .not()
-        .isEmpty()    
-],
-(req, res, next) => {
-    const errors = validationResult(req);
+    [
+        check('id', 'id is required')
+            .not()
+            .isEmpty(),
+        check('name')
+            .not()
+            .isEmpty()
+    ],
+    (req, res, next) => {
+        const errors = validationResult(req);
 
-    if (!errors.isEmpty()) {
-        return res.status(422).json(errors.array());
-    }
-    else {
-        const product = new productSchema({
-        titulo: req.body.titulo,
-        precio: req.body.precio,
-        imagen: rec.body.imagen,                       
+        if (!errors.isEmpty()) {
+            return res.status(422).json(errors.array());
+        }
+        else {
+            const product = new productSchema({
+                titulo: req.body.titulo,
+                precio: req.body.precio,
+                imagen: rec.body.imagen,
+            });
+            product.save().then((response) => {
+                res.status(201).json({
+                    message: "product successfully created!",
+                    result: response
+                });
+            }).catch(error => {
+                res.status(500).json({
+                    error: error
+                });
+            })
+        };
     });
-    product.save().then((response) => {
-        res.status(201).json({
-            message: "product successfully created!",
-            result: response
-        });
-    }).catch(error => {
-        res.status(500).json({
-            error: error
-        });
-    })};        
-});
 router1.route('/products').get((req, res) => {
     productSchema.find((error, response) => {
         if (error) {
