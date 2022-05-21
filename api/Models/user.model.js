@@ -14,8 +14,10 @@ let userSchema = new Schema({
     password: {
         type: String
     },
-    rol: {
-        type: String
+    roles: {
+        type: String,
+        enum: ['ROL_USER', 'ROL_EDIT', 'ROL_ADMIN'],
+        default: 'ROL_USER'
     },
     image: {
         type: String
