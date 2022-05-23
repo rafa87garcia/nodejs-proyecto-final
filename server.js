@@ -10,6 +10,7 @@ const logger = require("morgan");
 const { connect } = require("./api/utils/database/connect");
 // routes
 const user = require("./api/Routes/user.router");
+const product = require("./api/Routes/product.router");
 //error
 const HTTPSTATUSCODE = require("./api/utils/httpStatusCode");
 //port to use server
@@ -28,6 +29,7 @@ app.use(cors());
 
 app.use('/public', express.static('public'));
 app.use('/users', user)
+app.use('/products', product)
 
 
 
