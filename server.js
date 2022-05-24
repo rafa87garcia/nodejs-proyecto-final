@@ -11,14 +11,13 @@ const { connect } = require("./api/utils/database/connect");
 // routes
 const user = require("./api/Routes/user.router");
 const product = require("./api/Routes/product.router");
+const order = require("./api/Routes/order.router");
 //error
 const HTTPSTATUSCODE = require("./api/utils/httpStatusCode");
 //port to use server
 PORT = 3000 || 4000;
-
 //to use database with server
 connect();
-
 // express configutration
 const app = express();
 app.use(bodyParser.json());
@@ -26,16 +25,13 @@ app.use(bodyParser.urlencoded({
     extended: false
 }));
 app.use(cors());
-
+//routes
 app.use('/public', express.static('public'));
-app.use('/users', user)
-app.use('/products', product)
-
-
-
+app.use('/users', user);
+app.use('/products', product);
+app.use('/orders', order);
 //use morgan
 app.use(logger("dev"));
-
 //error control
 app.use((_req, _res, next) => {
     let err = new Error;
@@ -46,8 +42,6 @@ app.use((_req, _res, next) => {
 app.use((err, req, res, next) => {
     return res.status(err.status || 500).json(err.message || "unexpected error");
 });
-
-
 app.listen(PORT, () => {
     console.log(`Server running in ${PORT}`);
 });

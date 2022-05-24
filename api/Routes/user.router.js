@@ -5,7 +5,6 @@ const router = express.Router();// required jsonwebtoken for using the function 
 const userSchema = require("../Models/user.model");// required jsonwebtoken for using the npm hta.
 const authorize = require("../utils/middlewares/auth.middleware");// required authorize for using the function .
 const { check, validationResult } = require('express-validator');// required express-validator for using the npm hta.
-
 // to Sign-up
 router.post("/register",
     [
@@ -24,17 +23,17 @@ router.post("/register",
     ],
     (req, res, next) => {
         const errors = validationResult(req);
-
         if (!errors.isEmpty()) {
+            // console.log(1);
             return res.status(422).json(errors.array());
         }
         else {
+            // console.log("2");
             bcrypt.hash(req.body.password, 5).then((hash) => {
                 const user = new userSchema({
                     name: req.body.name,
                     email: req.body.email,
-                    password: hash,
-
+                    password: hash
                 });
                 user.save().then((response) => {
                     response.password = undefined;
@@ -49,7 +48,8 @@ router.post("/register",
                 });
             });
         }
-    });
+    }
+    );
 
 
 // to Sign-in
