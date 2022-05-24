@@ -1,20 +1,17 @@
 const express = require("express"); // required express for using the npm hta.
 const router = express.Router();// required jsonwebtoken for using the function of espress hta.
-const orderSchema = require("../Models/order.model");// required for using model hta.
+const productSchema = require("../Models/product.model");// required for using model hta.
 const { check, validationResult } = require('express-validator');// required express-validator for using the npm hta.
 
 // to create product
 router.post("/",
     [
-        check('nº', 'nº is required')
+        check('id', 'id is required')
             .not()
             .isEmpty(),
-        check('product')
+        check('name')
             .not()
-            .isEmpty(),
-            check('product')
-            .not()
-            .isEmpty('user')
+            .isEmpty()
     ],
     (req, res, next) => {
         const errors = validationResult(req);
@@ -23,10 +20,10 @@ router.post("/",
             return res.status(422).json(errors.array());
         }
         else {
-            const product = new orderSchema({
-                nº: req.body.nº,
-                product: req.body.product,
-                user: rec.body.user,
+            const product = new productSchema({
+                titulo: req.body.titulo,
+                precio: req.body.precio,
+                imagen: rec.body.imagen,
             });
             product.save().then((response) => {
                 res.status(201).json({

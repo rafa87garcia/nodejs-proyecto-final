@@ -1,17 +1,20 @@
 const express = require("express"); // required express for using the npm hta.
 const router = express.Router();// required jsonwebtoken for using the function of espress hta.
-const productSchema = require("../Models/product.model");// required for using model hta.
+const orderSchema = require("../Models/order.model");// required for using model hta.
 const { check, validationResult } = require('express-validator');// required express-validator for using the npm hta.
 
 // to create product
-router.post("/create",
+router.post("/",
     [
-        check('id', 'id is required')
+        check('nº', 'nº is required')
             .not()
             .isEmpty(),
-        check('name')
+        check('product')
             .not()
-            .isEmpty()
+            .isEmpty(),
+            check('product')
+            .not()
+            .isEmpty('user')
     ],
     (req, res, next) => {
         const errors = validationResult(req);
@@ -20,12 +23,12 @@ router.post("/create",
             return res.status(422).json(errors.array());
         }
         else {
-            const product = new productSchema({
-                titulo: req.body.titulo,
-                precio: req.body.precio,
-                imagen: rec.body.imagen,
+            const order = new orderSchema({
+                nº: req.body.nº,
+                product: req.body.product,
+                user: rec.body.user,
             });
-            product.save().then((response) => {
+            order.save().then((response) => {
                 res.status(201).json({
                     message: "product successfully created!",
                     result: response
@@ -38,7 +41,7 @@ router.post("/create",
         };
     });
 router.route('/').get((req, res) => {
-    productSchema.find((error, response) => {
+    orderSchema.find((error, response) => {
         if (error) {
             return next(error)
         } else {
@@ -47,7 +50,7 @@ router.route('/').get((req, res) => {
     })
 })
 router.route('/:id').get((req, res, next) => {
-    productSchema.findById(req.params.id, (error, data) => {
+    orderSchema.findById(req.params.id, (error, data) => {
         if (error) {
             return next(error);
         } else {
@@ -58,7 +61,7 @@ router.route('/:id').get((req, res, next) => {
     })
 })
 router.route('/:id').put((req, res, next) => {
-    productSchema.findByIdAndUpdate(req.params.id, {
+    orderSchema.findByIdAndUpdate(req.params.id, {
         $set: req.body
     }, (error, data) => {
         if (error) {
@@ -70,7 +73,7 @@ router.route('/:id').put((req, res, next) => {
     })
 })
 router.route('/:id').delete((req, res, next) => {
-    productSchema.findByIdAndRemove(req.params.id, (error, data) => {
+    orderSchema.findByIdAndRemove(req.params.id, (error, data) => {
         if (error) {
             return next(error);
         } else {

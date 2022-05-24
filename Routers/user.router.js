@@ -3,6 +3,7 @@ const { check } = require('express-validator');
 const passport = require('passport');
 const { signIn } = require('../authentication/jsonwebtoken');
 const config = require('../config');
+const { isAuthenticated } = require('../middlewares/auth.middleware');
 const { validateField } = require('../middlewares/validateFields.middleware');
 
 
@@ -20,7 +21,7 @@ userRouter.post('/register', [
     }
     req.logIn(user, (errorLogin => {
       if (errorLogin) {
-        next(errorLogin);
+        return next(errorLogin);
       }
     }));
     res.status(201).json(user);
@@ -37,13 +38,14 @@ userRouter.post('/login', (req, res, next) => {
     }
     // Genero JWT de acceso.
     const token = signIn(user, config.JWT_SECRET);
+    console.log(res.user);
     return res.status(200).json({ user: user, token });
   }
 
   passport.authenticate('login', callback)(req);
 });
 
-userRouter.post('/logout', (req, res, _next) => {
+userRouter.post('/logout', [isAuthenticated], (req, res, _next) => {
   if (!req.user) {
     return res.sendStatus(301);
   }
