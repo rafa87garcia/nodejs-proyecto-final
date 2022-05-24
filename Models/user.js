@@ -8,6 +8,7 @@ const userSchema = Schema({
     role: { type: String, require: true, enum: ['ROL_USER', 'ROL_EDITOR', 'ROL_ADMIN'], default: 'ROL_USER' }
 }, {
     timestamps: true,
+    collection: 'users'
 }
 );
 
