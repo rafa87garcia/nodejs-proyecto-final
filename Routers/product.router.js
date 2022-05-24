@@ -1,42 +1,43 @@
 const express = require("express"); // required express for using the npm hta.
 const router = express.Router();// required jsonwebtoken for using the function of espress hta.
-const userSchema = require("../models/product.model");// required for using model hta.
+const productSchema = require("../Models/product.model");// required for using model hta.
 const { check, validationResult } = require('express-validator');// required express-validator for using the npm hta.
 
 // to create product
-router1.post("/create-product",
-[
-    check('id', 'id is required')
-        .not()
-        .isEmpty(),
-    check('name')
-        .not()
-        .isEmpty()    
-],
-(req, res, next) => {
-    const errors = validationResult(req);
+router.post("/",
+    [
+        check('id', 'id is required')
+            .not()
+            .isEmpty(),
+        check('name')
+            .not()
+            .isEmpty()
+    ],
+    (req, res, next) => {
+        const errors = validationResult(req);
 
-    if (!errors.isEmpty()) {
-        return res.status(422).json(errors.array());
-    }
-    else {
-        const product = new productSchema({
-        titulo: req.body.titulo,
-        precio: req.body.precio,
-        imagen: rec.body.imagen,                       
+        if (!errors.isEmpty()) {
+            return res.status(422).json(errors.array());
+        }
+        else {
+            const product = new productSchema({
+                titulo: req.body.titulo,
+                precio: req.body.precio,
+                imagen: rec.body.imagen,
+            });
+            product.save().then((response) => {
+                res.status(201).json({
+                    message: "product successfully created!",
+                    result: response
+                });
+            }).catch(error => {
+                res.status(500).json({
+                    error: error
+                });
+            })
+        };
     });
-    product.save().then((response) => {
-        res.status(201).json({
-            message: "product successfully created!",
-            result: response
-        });
-    }).catch(error => {
-        res.status(500).json({
-            error: error
-        });
-    })};        
-});
-router1.route('/products').get((req, res) => {
+router.route('/').get((req, res) => {
     productSchema.find((error, response) => {
         if (error) {
             return next(error)
@@ -45,7 +46,7 @@ router1.route('/products').get((req, res) => {
         }
     })
 })
-router1.route('/product/:id').get((req, res, next) => {
+router.route('/:id').get((req, res, next) => {
     productSchema.findById(req.params.id, (error, data) => {
         if (error) {
             return next(error);
@@ -56,7 +57,7 @@ router1.route('/product/:id').get((req, res, next) => {
         }
     })
 })
-router1.route('/edit-product/:id').put((req, res, next) => {
+router.route('/:id').put((req, res, next) => {
     productSchema.findByIdAndUpdate(req.params.id, {
         $set: req.body
     }, (error, data) => {
@@ -68,7 +69,7 @@ router1.route('/edit-product/:id').put((req, res, next) => {
         }
     })
 })
-router1.route('/delete-product/:id').delete((req, res, next) => {
+router.route('/:id').delete((req, res, next) => {
     productSchema.findByIdAndRemove(req.params.id, (error, data) => {
         if (error) {
             return next(error);
@@ -79,4 +80,4 @@ router1.route('/delete-product/:id').delete((req, res, next) => {
         }
     })
 })
-module.exports = router1;
+module.exports = router;

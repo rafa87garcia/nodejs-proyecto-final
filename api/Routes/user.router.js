@@ -2,41 +2,41 @@ const express = require("express"); // required express for using the npm hta.
 const jwt = require("jsonwebtoken"); // required jsonwebtoken for using the npm hta.
 const bcrypt = require("bcrypt");// required bcrypt for using the npm hta.
 const router = express.Router();// required jsonwebtoken for using the function of espress hta.
-const userSchema = require("../models/user.model");// required jsonwebtoken for using the npm hta.
+const userSchema = require("../Models/user.model");// required jsonwebtoken for using the npm hta.
 const authorize = require("../utils/middlewares/auth.middleware");// required authorize for using the function .
 const { check, validationResult } = require('express-validator');// required express-validator for using the npm hta.
-
 // to Sign-up
 router.post("/register",
-[
-    check('name')
-        .not()
-        .isEmpty()
-        .isLength({ min: 3 })
-        .withMessage('Name must be atleast 3 characters long'),
-    check('email', 'Email is required')
-        .not()
-        .isEmpty(),
-    check('password', 'Password should be between 5 to 8 characters long')
-        .not()
-        .isEmpty()
-        .isLength({ min: 5, max: 8 })
-],
-    (req, res, next) => {
+    [
+        check('name')
+            .not() 
+            .isEmpty()
+            .isLength({ min: 3 })
+            .withMessage('Name must be atleast 3 characters long'),
+        check('email', 'Email is required')
+            .not()
+            .isEmpty(),
+        check('password', 'Password should be between 5 to 8 characters long')
+            .not()
+            .isEmpty()
+            .isLength({ min: 5, max: 8 })
+    ],
+        (req, res, next) => {
+            console.log(req);
         const errors = validationResult(req);
-
         if (!errors.isEmpty()) {
-            return res.status(422).json(errors.array());
+            return res.status(422).jsonp(errors.array());
         }
         else {
+            // console.log("2");
             bcrypt.hash(req.body.password, 5).then((hash) => {
                 const user = new userSchema({
                     name: req.body.name,
                     email: req.body.email,
                     password: hash,
-                    
                 });
                 user.save().then((response) => {
+                    response.password = undefined;
                     res.status(201).json({
                         message: "User successfully created!",
                         result: response
@@ -48,8 +48,9 @@ router.post("/register",
                 });
             });
         }
-    });
-  
+    }
+    );
+
 
 // to Sign-in
 router.post("/login", (req, res, next) => {
@@ -76,7 +77,7 @@ router.post("/login", (req, res, next) => {
         }, "longer-secret-is-better", {
             expiresIn: "1h"
         });
-        res.status(200).json({  
+        res.status(200).json({
             token: jwtToken,
             expiresIn: 3600,
             _id: getUser._id
@@ -88,10 +89,14 @@ router.post("/login", (req, res, next) => {
     });
 });
 // to log-out
-router.post('/logout', function(req, res){
-    req.logout();
-    res.redirect('/');
-  });
+router.post('/logout', [ isAuthenticated],function (req, res) {
+    console.log(!req.user);
+    if (!req.user) {
+        return res.sendStatus(301);
+    }
+    return res.status(200).json("User session close");
+});
+
 // to Get Users
 router.route('/').get((req, res) => {
     userSchema.find((error, response) => {
@@ -104,7 +109,7 @@ router.route('/').get((req, res) => {
 })
 
 // to Get Single User
-router.route('/user-profile/:id').get(authorize, (req, res, next) => {
+router.route('/:id').get(authorize, (req, res, next) => {
     userSchema.findById(req.params.id, (error, data) => {
         if (error) {
             return next(error);
@@ -117,7 +122,7 @@ router.route('/user-profile/:id').get(authorize, (req, res, next) => {
 })
 
 // to Update User
-router.route('/update-user/:id').put((req, res, next) => {
+router.route('/:id').put((req, res, next) => {
     userSchema.findByIdAndUpdate(req.params.id, {
         $set: req.body
     }, (error, data) => {
@@ -132,7 +137,7 @@ router.route('/update-user/:id').put((req, res, next) => {
 
 
 // to Delete User
-router.route('/delete/:id').delete((req, res, next) => {
+router.route('/:id').delete((req, res, next) => {
     userSchema.findByIdAndRemove(req.params.id, (error, data) => {
         if (error) {
             return next(error);

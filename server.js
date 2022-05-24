@@ -1,56 +1,50 @@
-//express
-const express = require("express");
-//mongoose
-const mongoose = require('mongoose');
-//cors
-const cors = require('cors');
-//body-parser
-const bodyParser = require('body-parser');
-//morgan
-const logger=require("morgan");
-//database
-const{connect}= require("./api/utils/database/connect");
-// routes
-const user=require("./api/routes/user-routes");
-//error
-const HTTPSTATUSCODE= require ("./api/utils/httpStatusCode");   
-//port to use server
-PORT=3000 || 4000;
 
-//to use database with server
- connect();
+const config = require('./config');
+const express = require('express');
+const passport = require('passport');
+require('./authentication/passport')
+const userRouter = require('./Routers/user.router');
+const prodcutRouter = require('./Routers/product.router');
+const orderRouter = require('./Routers/order.router');
+const { isAuthenticated } = require('./middlewares/auth.middleware');
 
-// express configutration
-const app = express();
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-    extended: false
-}));
-app.use(cors());
-// to indicate routes to use
-app.use('/public', express.static('public'));
-app.use('/user',user)
+const db = require('./db');
 
+const server = express();
+const PORT = config.PORT;
 
-//use morgan
- app.use(logger("dev"));
+// Enabled body
+server.use(express.json());
+server.use(express.urlencoded({ extended: false }));
 
-//error control
-app.use((_req,_res,next)=>{
-    let err= new Error;
-    err.status = 404;
-    err.message= HTTPSTATUSCODE[404];
-    next(err);
-});
-app.use((err, req,res,next)=>{
-    return res.status(err.status||500).json(err.message||"unexpected error");
+server.use(passport.initialize());
+
+server.get('/', (_req, res) => {
+  res.status(200).send("Server running")
 });
 
- 
-app.listen(PORT, () => {
-    console.log(`Server running in http://localhost:${PORT}`);
+server.use('/users', userRouter);
+server.use('/products', prodcutRouter);
+server.use('/orders', orderRouter);
+
+
+server.use('*', (_req, _res, next) => {
+  const error = new Error('Ruta no encotrada');
+  error.status = 404;
+  return next(error);
 });
 
+// Control de errores
+server.use((err, _req, res, _next) => {
+  return res
+    .status(err.status || 500)
+    .json(err.message || 'Error inesperado en el servidor');
 
+});
 
-//rutas de modelos,  
+db.connectDB.then(() => {
+  console.log("Conection to database.");
+  server.listen(PORT, () => {
+    console.log(`Node server listening on port ${PORT}`);
+  });
+});

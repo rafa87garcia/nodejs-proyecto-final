@@ -4,22 +4,16 @@ const uniqueValidator = require('mongoose-unique-validator');// for use validato
 
 //to define the Schema of our user
 let userSchema = new Schema({
-    email: {
+    name: { type: String },
+    email: { type: String, unique: true //to indicate that can be only one user with one email asociated.
+    },
+    password: { type: String },
+    roles: {
         type: String,
-        unique: true //to indicate that can be only one user name with one email asociated.
+        enum: ['ROL_USER', 'ROL_EDIT', 'ROL_ADMIN'],
+        default: 'ROL_USER'
     },
-    name: {
-        type: String
-    },
-    password: {
-        type: String
-    },
-    rol: {
-        type: String
-    },
-    image: {
-        type: String
-    },
+   
 
 }, {
     collection: 'users'
