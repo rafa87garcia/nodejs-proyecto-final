@@ -5,11 +5,19 @@ const router = express.Router();// required jsonwebtoken for using the function 
 const userSchema = require("../Models/user.model");// required jsonwebtoken for using the npm hta.
 const authorize = require("../utils/middlewares/auth.middleware");// required authorize for using the function .
 const { check, validationResult } = require('express-validator');// required express-validator for using the npm hta.
+<<<<<<< HEAD
+=======
+
+>>>>>>> a5ee94d124be6cf2b50cf42b82593d1c7c7d2c40
 // to Sign-up
 router.post("/register",
     [
         check('name')
+<<<<<<< HEAD
             .not() 
+=======
+            .not()
+>>>>>>> a5ee94d124be6cf2b50cf42b82593d1c7c7d2c40
             .isEmpty()
             .isLength({ min: 3 })
             .withMessage('Name must be atleast 3 characters long'),
@@ -21,6 +29,7 @@ router.post("/register",
             .isEmpty()
             .isLength({ min: 5, max: 8 })
     ],
+<<<<<<< HEAD
         (req, res, next) => {
             console.log(req);
         const errors = validationResult(req);
@@ -29,11 +38,24 @@ router.post("/register",
         }
         else {
             // console.log("2");
+=======
+    (req, res, next) => {
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            return res.status(422).json(errors.array());
+        }
+        else {
+>>>>>>> a5ee94d124be6cf2b50cf42b82593d1c7c7d2c40
             bcrypt.hash(req.body.password, 5).then((hash) => {
                 const user = new userSchema({
                     name: req.body.name,
                     email: req.body.email,
                     password: hash,
+<<<<<<< HEAD
+=======
+
+>>>>>>> a5ee94d124be6cf2b50cf42b82593d1c7c7d2c40
                 });
                 user.save().then((response) => {
                     response.password = undefined;
@@ -48,8 +70,12 @@ router.post("/register",
                 });
             });
         }
+<<<<<<< HEAD
     }
     );
+=======
+    });
+>>>>>>> a5ee94d124be6cf2b50cf42b82593d1c7c7d2c40
 
 
 // to Sign-in
@@ -89,6 +115,7 @@ router.post("/login", (req, res, next) => {
     });
 });
 // to log-out
+<<<<<<< HEAD
 router.post('/logout', [ isAuthenticated],function (req, res) {
     console.log(!req.user);
     if (!req.user) {
@@ -97,6 +124,12 @@ router.post('/logout', [ isAuthenticated],function (req, res) {
     return res.status(200).json("User session close");
 });
 
+=======
+router.post('/logout', function (req, res) {
+    req.logout();
+    res.redirect('/');
+});
+>>>>>>> a5ee94d124be6cf2b50cf42b82593d1c7c7d2c40
 // to Get Users
 router.route('/').get((req, res) => {
     userSchema.find((error, response) => {

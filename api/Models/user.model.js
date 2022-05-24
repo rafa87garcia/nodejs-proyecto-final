@@ -7,11 +7,20 @@ let userSchema = new Schema({
     name: { type: String },
     email: { type: String, unique: true //to indicate that can be only one user with one email asociated.
     },
+<<<<<<< HEAD:api/Models/user.model.js
     password: { type: String },
+=======
+>>>>>>> a5ee94d124be6cf2b50cf42b82593d1c7c7d2c40:api/models/user.model.js
     roles: {
         type: String,
         enum: ['ROL_USER', 'ROL_EDIT', 'ROL_ADMIN'],
         default: 'ROL_USER'
+<<<<<<< HEAD:api/Models/user.model.js
+=======
+    },
+    image: {
+        type: String
+>>>>>>> a5ee94d124be6cf2b50cf42b82593d1c7c7d2c40:api/models/user.model.js
     },
    
 
