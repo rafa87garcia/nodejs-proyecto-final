@@ -9,7 +9,7 @@ const { check, validationResult } = require('express-validator');// required exp
 router.post("/register",
     [
         check('name')
-            .not()
+            .not() 
             .isEmpty()
             .isLength({ min: 3 })
             .withMessage('Name must be atleast 3 characters long'),
@@ -21,11 +21,11 @@ router.post("/register",
             .isEmpty()
             .isLength({ min: 5, max: 8 })
     ],
-    (req, res, next) => {
+        (req, res, next) => {
+            console.log(req);
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            // console.log(1);
-            return res.status(422).json(errors.array());
+            return res.status(422).jsonp(errors.array());
         }
         else {
             // console.log("2");
@@ -33,7 +33,7 @@ router.post("/register",
                 const user = new userSchema({
                     name: req.body.name,
                     email: req.body.email,
-                    password: hash
+                    password: hash,
                 });
                 user.save().then((response) => {
                     response.password = undefined;
@@ -89,7 +89,7 @@ router.post("/login", (req, res, next) => {
     });
 });
 // to log-out
-router.post('/logout', function (req, res) {
+router.post('/logout', [ isAuthenticated],function (req, res) {
     console.log(!req.user);
     if (!req.user) {
         return res.sendStatus(301);
