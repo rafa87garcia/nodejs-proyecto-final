@@ -1,51 +1,45 @@
-//express
-const express = require("express");
-//cors
-const cors = require('cors');
-//body-parser
-const bodyParser = require('body-parser');
-//morgan
-const logger = require("morgan");
-//database
-const { connect } = require("./api/utils/database/connect");
-// routes
-const user = require("./api/Routes/user.router");
-//error
-const HTTPSTATUSCODE = require("./api/utils/httpStatusCode");
-//port to use server
-PORT = 3000 || 4000;
 
-//to use database with server
-connect();
+const config = require('./config');
+const express = require('express');
+const passport = require('passport');
+require('./authentication/passport')
+const userRouter = require('./Routers/user.router');
+const { isAuthenticated } = require('./middlewares/auth.middleware');
 
-// express configutration
-const app = express();
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-    extended: false
-}));
-app.use(cors());
+const db = require('./db');
 
-app.use('/public', express.static('public'));
-app.use('/users', user)
+const server = express();
+const PORT = config.PORT;
 
+// Enabled body
+server.use(express.json());
+server.use(express.urlencoded({ extended: false }));
 
+server.use(passport.initialize());
 
-//use morgan
-app.use(logger("dev"));
-
-//error control
-app.use((_req, _res, next) => {
-    let err = new Error;
-    err.status = 404;
-    err.message = HTTPSTATUSCODE[404];
-    next(err);
-});
-app.use((err, req, res, next) => {
-    return res.status(err.status || 500).json(err.message || "unexpected error");
+server.get('/', (_req, res) => {
+  res.status(200).send("Server running")
 });
 
+server.use('/users', userRouter);
 
-app.listen(PORT, () => {
-    console.log(`Server running in ${PORT}`);
+server.use('*', (_req, _res, next) => {
+  const error = new Error('Ruta no encotrada');
+  error.status = 404;
+  return next(error);
+});
+
+// Control de errores
+server.use((err, _req, res, _next) => {
+  return res
+    .status(err.status || 500)
+    .json(err.message || 'Error inesperado en el servidor');
+
+});
+
+db.connectDB.then(() => {
+  console.log("Conection to database.");
+  server.listen(PORT, () => {
+    console.log(`Node server listening on port ${PORT}`);
+  });
 });
