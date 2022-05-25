@@ -6,6 +6,7 @@ require('./authentication/passport')
 const userRouter = require('./Routers/user.router');
 const orderRouter = require('./Routers/order.router');
 const productRouter = require('./Routers/product.router');
+const emailRouter = require('./Routers/email.router');
 const { isAuthenticated } = require('./middlewares/auth.middleware');
 
 const db = require('./db');
@@ -26,6 +27,7 @@ server.get('/', (_req, res) => {
 server.use('/orders', orderRouter);
 server.use('/products', productRouter);
 server.use('/users', userRouter);
+server.use('/emails', emailRouter);
 
 server.use('*', (_req, _res, next) => {
   const error = new Error('Ruta no encotrada');
