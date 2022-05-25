@@ -6,8 +6,7 @@
   "scripts": {
     "dev": "nodemon server.js",
     "start": "node server.js",
-    "gererate:properties": "node ./seeds/properties.seeds.js",
-    "gererate:favorites": "node ./seeds/favorites.seeds.js"
+    "gererate:products": "node ./seeds/products.seeds.js"
   },
   "repository": {
     "type": "git",

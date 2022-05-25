@@ -41,7 +41,7 @@ router.post("/",
         };
     });
 router.route('/').get((req, res) => {
-    productSchema.find((error, response) => {
+    orderSchema.find((error, response) => {
         if (error) {
             return next(error)
         } else {
@@ -50,7 +50,7 @@ router.route('/').get((req, res) => {
     })
 })
 router.route('/:id').get((req, res, next) => {
-    productSchema.findById(req.params.id, (error, data) => {
+    orderSchema.findById(req.params.id, (error, data) => {
         if (error) {
             return next(error);
         } else {
@@ -61,7 +61,7 @@ router.route('/:id').get((req, res, next) => {
     })
 })
 router.route('/:id').put((req, res, next) => {
-    productSchema.findByIdAndUpdate(req.params.id, {
+    orderSchema.findByIdAndUpdate(req.params.id, {
         $set: req.body
     }, (error, data) => {
         if (error) {
@@ -73,7 +73,7 @@ router.route('/:id').put((req, res, next) => {
     })
 })
 router.route('/:id').delete((req, res, next) => {
-    productSchema.findByIdAndRemove(req.params.id, (error, data) => {
+    orderSchema.findByIdAndRemove(req.params.id, (error, data) => {
         if (error) {
             return next(error);
         } else {
