@@ -9,18 +9,17 @@ const transporter = nodemailer.createTransport({
   post: 587,
   secure: false,
   auth: {
-    user: "oemgrrribhzvre32v@ethereal.email",
-    pass: "swEcNjeHYuvaEuXvSd"
+    user: "humberto.koch86@ethereal.email",
+    pass: "nbAHHkjj6UtMmYY5en"
   }
 });
 
 // to create product
 router.post("/contact", (req, res, next) => {
-    
+
   const sender = req.body.email;
   const subject = req.body.subject;
   const message = req.body.message;
-
 
   const mailOptions = {
     form: sender,
@@ -30,7 +29,7 @@ router.post("/contact", (req, res, next) => {
     <h2>Formulario de contacto</h2>
     <p>
       <strong>Correo electronico:</strong>
-      <span>${remitent}</span>
+      <span>${sender}</span>
     </p>
     <p>
     <strong>Asunto:</strong>
@@ -47,6 +46,7 @@ router.post("/contact", (req, res, next) => {
     if (error) {
       return res.status(500).send(error.message)
     }
+    console.log(info);
     console.log("Email enviado");
     res.status(200).json("Send email");
   })
