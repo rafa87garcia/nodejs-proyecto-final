@@ -5,7 +5,7 @@ let productSchema = new Schema({
     name: { type: String },
     description: { type: String,},
     image: { type: String },
-    pvp: { type: Number },
+    price: { type: Number },
     category: { type: String, require: true, enum: ['Man', 'Woman', 'Child'] },  
 },{
     collection: 'products'
