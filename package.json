@@ -6,8 +6,7 @@
   "scripts": {
     "dev": "nodemon server.js",
     "start": "node server.js",
-    "gererate:properties": "node ./seeds/properties.seeds.js",
-    "gererate:favorites": "node ./seeds/favorites.seeds.js"
+    "generate:products": "node seeds/products.seeds.js"
   },
   "repository": {
     "type": "git",
@@ -21,11 +20,13 @@
   "homepage": "https://github.com/rafa87garcia/nodejs-metroxmetro#readme",
   "dependencies": {
     "bcrypt": "^5.0.1",
+    "cors": "^2.8.5",
     "dotenv": "^16.0.0",
     "express": "^4.17.2",
     "express-validator": "^6.14.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.2.1",
+    "nodemailer": "^6.7.5",
     "passport": "^0.5.2",
     "passport-local": "^1.0.0"
   },

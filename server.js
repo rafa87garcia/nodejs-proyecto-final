@@ -6,12 +6,28 @@ require('./authentication/passport')
 const userRouter = require('./Routers/user.router');
 const orderRouter = require('./Routers/order.router');
 const productRouter = require('./Routers/product.router');
-const { isAuthenticated } = require('./middlewares/auth.middleware');
+const emailRouter = require('./Routers/email.router');
+const cors = require("cors");
+
+
 
 const db = require('./db');
 
 const server = express();
 const PORT = config.PORT;
+
+server.use((req, res, next) => {
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Credentials', true);
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    next();
+});
+
+server.use(cors({
+  origin: "*",
+  credentials: true,
+}));
+
 
 // Enabled body
 server.use(express.json());
@@ -26,6 +42,7 @@ server.get('/', (_req, res) => {
 server.use('/orders', orderRouter);
 server.use('/products', productRouter);
 server.use('/users', userRouter);
+server.use('/emails', emailRouter);
 
 server.use('*', (_req, _res, next) => {
   const error = new Error('Ruta no encotrada');
