@@ -7,7 +7,8 @@ let orderSchema = new Schema({
     product: [{type: mongoose.Types.ObjectId, ref: 'Product'}],
     user:[{type: mongoose.Types.ObjectId, ref: 'User'}]
 },{
-    collection: 'orders'
+    timestamps: true,
+    collection: 'order'
 })
 // use the plugin to control and mesage of unique id.
 module.exports = mongoose.model('Order', orderSchema);
