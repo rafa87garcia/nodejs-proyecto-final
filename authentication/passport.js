@@ -24,12 +24,7 @@ passport.use(
         }
         const passEncry = await bcrypt.hash(password, SKIP);
 
-        const newUser = new User({
-          email: username,
-          password: passEncry,
-          name: req.body.name,
-          rol: req.body.rol,
-        });
+        const newUser = new User(req.body);
         const userSave = await newUser.save();
         userSave.password = undefined;
         done(null, userSave);
