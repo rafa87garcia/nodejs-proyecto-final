@@ -5,7 +5,7 @@ const { signIn } = require('../authentication/jsonwebtoken');
 const config = require('../config');
 const { isAuthenticated } = require('../middlewares/auth.middleware');
 const { validateField } = require('../middlewares/validateFields.middleware');
-
+const User = require('../Models/user.model');
 
 const userRouter = express.Router();
 
@@ -49,6 +49,19 @@ userRouter.post('/logout', [isAuthenticated], (req, res, _next) => {
     return res.sendStatus(301);
   }
   return res.status(200).json("User session close");
+});
+
+userRouter.get('/', (req, res, _next) => {
+
+  return User.find()
+    .then(user => {
+      return res.status(200).json(user);
+    })
+    .catch((err) => {
+      const error = new Error(err);
+      error.status(500);
+      return error;
+    });
 });
 
 module.exports = userRouter;
