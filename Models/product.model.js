@@ -6,6 +6,7 @@ let productSchema = new Schema({
     description: { type: String,},
     image: { type: String },
     price: { type: Number },
+    size: { type: Number, require: true, enum: [39, 40, 41]},
     category: { type: String, require: true, enum: ['Man', 'Woman', 'Child'] },  
 },{
     timestamps: true,
