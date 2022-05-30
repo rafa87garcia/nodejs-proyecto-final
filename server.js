@@ -12,6 +12,7 @@ const cors = require("cors");
 
 
 const db = require('./db');
+const { isAuthenticated } = require('./middlewares/auth.middleware');
 
 const server = express();
 const PORT = config.PORT;

@@ -8,6 +8,7 @@ let productSchema = new Schema({
     price: { type: Number },
     category: { type: String, require: true, enum: ['Man', 'Woman', 'Child'] },  
 },{
+    timestamps: true,
     collection: 'products'
 })
 

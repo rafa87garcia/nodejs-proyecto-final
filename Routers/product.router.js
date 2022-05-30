@@ -1,83 +1,90 @@
-const express = require("express"); // required express for using the npm hta.
-const router = express.Router();// required jsonwebtoken for using the function of espress hta.
-const productSchema = require("../Models/product.model");// required for using model hta.
-const { check, validationResult } = require('express-validator');// required express-validator for using the npm hta.
+const { request } = require('express');
+const express = require('express');
+const auth = require('../middlewares/auth.middleware');
+const Product = require('../Models/product.model');
 
-// to create product
-router.post("/create",
-    [
-        check('id', 'id is required')
-            .not()
-            .isEmpty(),
-        check('name')
-            .not()
-            .isEmpty()
-    ],
-    (req, res, next) => {
-        const errors = validationResult(req);
+const productRouter = express.Router();
 
-        if (!errors.isEmpty()) {
-            return res.status(422).json(errors.array());
-        }
-        else {
-            const product = new productSchema({
-                titulo: req.body.titulo,
-                precio: req.body.precio,
-                imagen: rec.body.imagen,
-            });
-            product.save().then((response) => {
-                res.status(201).json({
-                    message: "product successfully created!",
-                    result: response
-                });
-            }).catch(error => {
-                res.status(500).json({
-                    error: error
-                });
-            })
-        };
-    });
-router.route('/').get((req, res) => {
-    productSchema.find((error, response) => {
-        if (error) {
-            return next(error)
-        } else {
-            res.status(200).json(response)
-        }
-    })
-})
-router.route('/:id').get((req, res, next) => {
-    productSchema.findById(req.params.id, (error, data) => {
-        if (error) {
+productRouter.get('/', (req, res, _next) => {
+    // const { title, type } = req.query;
+
+    // let filter = {};
+    // if (title) {
+    //     filter = { ...filter, name: { $regex: name } };
+    // }
+    // if (type) {
+    //     filter = { ...filter, type: { $eq: type } };
+    // }
+    return Product.find()
+        .then(land => {
+            return res.status(200).json(land);
+        })
+        .catch((err) => {
+            const error = new Error(err);
+            error.status(500);
+            return error;
+        });
+});
+
+productRouter.get('/:id', (req, res, next) => {
+    const id = req.params.id;
+    return Product.findById(id)
+        .then(land => {
+            if (!land) {
+                const error = new Error('Land not found');
+                error.status = 404;
+                return next(error);
+            }
+            return res.status(200).json(land);
+        })
+        .catch(err => {
+            const error = new Error(err);
+            error.status = 500;
             return next(error);
-        } else {
-            res.status(200).json({
-                msg: data
-            })
-        }
-    })
-})
-router.route('/:id').put((req, res, next) => {
-    productSchema.findByIdAndUpdate(req.params.id, {
-        $set: req.body
-    }, (error, data) => {
-        if (error) {
+        });
+});
+
+productRouter.post('/', (req, res, next) => {
+
+
+    const newProperty = new Product(req.body);
+
+    return newProperty.save()
+        .then(() => {
+            return res.status(201).json("New Product");
+        })
+        .catch(err => {
+            const error = new Error(err);
+            error.status = 500;
             return next(error);
-        } else {
-            res.json(data)
-            console.log('User successfully updated!')
-        }
-    })
-})
-router.route('/:id').delete((req, res, next) => {
-    productSchema.findByIdAndRemove(req.params.id, (error, data) => {
-        if (error) {
+        })
+});
+
+productRouter.put('/:id', (req, res, next) => {
+    const id = req.params.id;
+
+    Product.findOneAndUpdate(id, { $set: req.body }, { new: true })
+        .then((land) => {
+            return res.status(200).json(land);
+        })
+        .catch(err => {
+            const error = new Error(err);
+            error.status = 500;
             return next(error);
-        } else {
-            res.status(200).json({
-                msg: data
-            })
-        }
-    })
+        })
 })
-module.exports = router;
+
+productRouter.delete('/:id', (req, res, next) => {
+    const id = req.params.id;
+    Product.findByIdAndDelete(id)
+        .then(() => {
+            return res.status(200).json(`Product deleted ${id}`);
+        })
+        .catch(err => {
+            const error = new Error(err);
+            error.status = 500;
+            return next(error);
+        })
+});
+
+module.exports = productRouter;

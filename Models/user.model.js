@@ -7,7 +7,9 @@ const userSchema = Schema({
     name: { type: String },
     role: { type: String, require: true, enum: ["admin", "editor", "authenticate"], default: "authenticate" }
 }, {
+
     timestamps: true,
+    collection: 'users'
 }
 );
 

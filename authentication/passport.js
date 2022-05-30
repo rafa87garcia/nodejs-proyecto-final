@@ -20,7 +20,7 @@ passport.use(
         const userCurrent = await User.findOne({ email: username });
         if (userCurrent) {
           const error = new Error("User exist");
-          done(error);
+          return done(error);
         }
         const passEncry = await bcrypt.hash(password, SKIP);
 
