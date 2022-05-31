@@ -23,8 +23,22 @@ passport.use(
           return done(error);
         }
         const passEncry = await bcrypt.hash(password, SKIP);
+        const role = req.body.isAdmin ? 'admin' : 'authenticate'
 
-        const newUser = new User(req.body);
+        const newUser = new User({
+            name: req.body.name,
+            lastname: req.body.lastname,
+            email: req.body.email,
+            password: passEncry,
+            phoneNumber: req.body.phone,
+            birthDate: req.body.birthdate,
+            address: req.body.address,
+            city: req.body.city,
+            postal_code: req.body.postalCode,
+            province: req.body.province,
+            country: req.body.country,
+            role: role
+        });
         const userSave = await newUser.save();
         userSave.password = undefined;
         done(null, userSave);
@@ -55,6 +69,7 @@ passport.use(
           password,
           currentUser.password
         );
+
 
         if (!passValid) {
           const error = new Error('The email & password combination is incorrect!');

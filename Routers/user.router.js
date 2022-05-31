@@ -31,6 +31,7 @@ userRouter.post('/register', [
 });
 
 userRouter.post('/login', (req, res, next) => {
+
   const callback = (error, user) => {
     if (error) {
       console.log("Error al entrar en callback", error);
